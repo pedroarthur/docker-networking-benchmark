@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE tsung SYSTEM "/usr/share/tsung/tsung-1.0.dtd" []>
+
+<tsung>
+  <clients>
+    <!--<client host="client-clone" >
+      <ip scan="true" value="h1-eth0"/>
+    </client>-->
+    <client host="localhost" use_controller_vm="true"/>
+  </clients>
+
+  <servers>
+    <server host="server" port="8080" type="tcp" weight="1"/>
+<!--    <server host="server" port="5040" type="tcp" weight="1"/>-->
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="1" unit="minute">
+      <users arrivalrate="2" unit="minute"/>
+    </arrivalphase>
+  </load>
+
+  <options>
+    <option name="ports_range" min="1024" max="65535"/>
+    <option name="rate_limit" value="4024"></option>
+  </options>
+
+  <sessions>
+    <session name="test-cap" weight="1" type="ts_http">
+   <!-- <transaction name="transaction1">-->
+      <request>
+        <http url="/dummy.file" method="GET">
+          <http_header name="Connection" value="close"/>
+        </http>
+      </request>
+<!--      <request>
+        <http url="/small.pdf" method="GET">
+          <http_header name="Connection" value="close"/>
+        </http>
+      </request>
+      <request>
+        <http url="/file50.txt" method="GET">
+          <http_header name="Connection" value="close"/>
+        </http>
+      </request>
+    </transaction>-->
+    </session>
+
+ <!--   <session probability="100" name="raw" type="ts_raw">
+       <transaction name="open">
+         <request> <raw data="HELLO" ack="local"></raw> </request>
+       </transaction>
+
+       <thinktime value="4"/>
+       <request> <raw datasize="2048" ack="local"></raw> </request>
+
+       <transaction name="bye">
+         <request> <raw data="BYEBYE" ack="local"></raw> </request>
+       </transaction>
+    </session>-->
+
+  </sessions>
+
+</tsung>
+

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+ping_wait () {
+  local tryouts=0
+
+  while ! ping -w 1 -c 1 "${@}" &> /dev/null
+  do
+    echo "ping to ${*} failed ($((tryouts++)))"
+  done
+}
+
+[[ -n "${EXPERIMENT_SIZE}" ]] && {
+  for ((i=0;i<EXPERIMENT_SIZE;i++))
+  do
+    ping_wait "host-$i" &
+  done
+  wait
+}
+
+echo -n "${@}" \
+  | parallel --delimiter " " \
+    --jobs "${PARALLEL_JOBS:=64}" \
+    iperf \
+      --time "${IPERF_TIME:=10}" \
+      --interval "${IPERF_INTERVAL:=10}" \
+      --port "${IPERF_PORT:=5001}" \
+      -c
+
